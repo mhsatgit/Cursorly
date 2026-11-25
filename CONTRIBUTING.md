@@ -23,7 +23,7 @@ Thank you for your interest in improving Cursorly!
 
 4. Install Android Build Tools:
 
-   Refer README [Running Tests & Building](README.md#running-tests--building)
+   Refer README [Run Android Unit Tests & Build Debug APK](#run-android-unit-tests--build-debug-apk)
 
 ## Running Tests
 

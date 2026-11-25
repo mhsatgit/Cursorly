@@ -112,14 +112,23 @@ Cursorly/
 - **Android Device** (`Android 9 / API 28+`)
 - **Optional:** Run `tools.ps1` on Windows x64 to automatically install the portable Android build toolchain (`.tools/jdk`, `.tools/android-sdk`, `.tools/gradle-9.9.1`), or open `android/` in **Android Studio**; **ADB** is included in `.tools/android-sdk/platform-tools` if using `--mode adb`
 
-### Option 1: Quick Start (One-Click Windows Setup)
+### Option 1: Quick Start (Recommended for Users)
 
-1. Double-click **`setup.bat`** (creates `.venv` and installs dependencies from `requirements.txt`).
-2. Double-click **`run_cursorly.bat`** to start Cursorly in default Seamless mode (Wi-Fi / Hotspot / USB Tethering + Bluetooth RFCOMM + Auto-Discovery).
+1. **Install the Android App:** Download the latest APK from [GitHubReleases](https://github.com/mhsatgit/Cursorly/releases/latest) and install it on your Android phone.
+2. **Setup the PC Host:** Double-click **`setup.bat`** on Windows (creates `.venv` and installs dependencies from
+    `requirements.txt`).
+3. **Launch the PC Host:** Double-click **`run_cursorly.bat`** to start Cursorly in default Seamless mode (Wi-Fi / Hotspot /
+    USB Tethering + Bluetooth RFCOMM + Auto-Discovery). If Windows Firewall prompts, allow access on **Private** networks.
+4. **Connect:** Open **Cursorly** on your phone—your PC appears automatically in **Available PCs** (or auto-connects when a
+    single host is detected).
 
 ### Option 2: Manual Setup & CLI Launch
 
-#### 1. Clone the repository and create a Python virtual environment
+#### 1. **Install the Android App:**
+  Download the latest APK from [GitHubReleases](https://github.com/mhsatgit/Cursorly/releases/latest)
+  and install it on your Android phone.
+
+#### 2. Clone the repository and create a Python virtual environment
 
 ```powershell
 git clone https://github.com/mhsatgit/Cursorly.git
@@ -129,7 +138,7 @@ py -3 -m venv .venv
 pip install -r requirements.txt
 ```
 
-#### 2. Run the PC Host
+#### 3. Run the PC Host
 
 ```powershell
 # Default Seamless mode (WebSocket + UDP Auto-Discovery + Bluetooth RFCOMM)
