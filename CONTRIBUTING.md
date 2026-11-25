@@ -23,8 +23,8 @@ Thank you for your interest in improving Cursorly!
 
 4. Install Android Build Tools:
 
-   Refer README [Run Android Unit Tests & Build Debug APK](#run-android-unit-tests--build-debug-apk)
-
+   Refer README [Run Android Unit Tests & Build Debug APK](https://github.com/mhsatgit/Cursorly?tab=readme-ov-file#run-android-unit-tests--build-debug-apk)
+   
 ## Running Tests
 
 Run the full automated Python test suite before opening a pull request:
