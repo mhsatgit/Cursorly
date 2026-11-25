@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cursorly"
+version = "1.0.0"
+description = "Ultra-Precise Mobile Mouse Control & High-Frequency Input Engine"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Cursorly Contributors"}
+]
+keywords = [
+    "trackpad",
+    "touchpad",
+    "android",
+    "mouse",
+    "windows",
+    "adb",
+    "fastapi",
+    "low-latency",
+    "one-euro-filter"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: System :: Hardware :: Universal Serial Bus (USB)",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "fastapi>=0.110.0,<1.0.0",
+    "uvicorn[standard]>=0.28.0,<1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.3.0",
+]
+
+[project.scripts]
+cursorly = "cursorly.main:main"
+
+[project.urls]
+Homepage = "https://github.com/mhsatgit/Cursorly"
+Repository = "https://github.com/mhsatgit/Cursorly"
+Issues = "https://github.com/mhsatgit/Cursorly/issues"
+
+[tool.setuptools.packages.find]
+include = ["cursorly*"]
