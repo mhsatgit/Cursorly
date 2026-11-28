@@ -1,3 +1,3 @@
-# ProGuard rules for HyperTouch
+# ProGuard rules for Cursorly
 -dontwarn okhttp3.**
 -dontwarn okio.**

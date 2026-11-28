@@ -117,10 +117,19 @@ class BluetoothHidTransport(private val context: Context) : TrackpadTransport {
             when (state) {
                 BluetoothProfile.STATE_CONNECTED -> {
                     hostDevice = device
+                    val deviceName = if (HostDiscoveryManager.hasBluetoothPermissions(context)) {
+                        try {
+                            device?.name
+                        } catch (_: SecurityException) {
+                            null
+                        }
+                    } else {
+                        null
+                    }
                     _status.value = ConnectionStatus(
                         state = ConnectionState.CONNECTED,
                         target = target,
-                        detail = "${target?.hostName ?: device?.name ?: "PC"} · BT HID Mouse",
+                        detail = "${target?.hostName ?: deviceName ?: "PC"} · BT HID Mouse",
                     )
                 }
                 BluetoothProfile.STATE_CONNECTING -> {

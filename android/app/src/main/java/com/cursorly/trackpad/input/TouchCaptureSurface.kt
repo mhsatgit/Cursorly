@@ -1,5 +1,6 @@
 package com.cursorly.trackpad.input
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -26,6 +27,7 @@ import kotlin.math.roundToInt
  * Low-latency raw MotionEvent surface that requests unbuffered dispatch and replays
  * every coalesced historical touch sample at native digitizer frequency (120Hz-360Hz+).
  */
+@SuppressLint("ViewConstructor")
 class TouchSurfaceView(
     context: Context,
     var onTouchSample: (eventType: Int, pointerId: Int, xDp: Float, yDp: Float, timestampSec: Double) -> Unit,
@@ -185,6 +187,7 @@ class TouchSurfaceView(
                 onTouchSample(PacketCodec.EVENT_UP, pid, x / density, y / density, event.eventTime / 1000.0)
                 if (event.actionMasked == MotionEvent.ACTION_UP) {
                     activeFingers.clear()
+                    performClick()
                 }
                 invalidate()
             }
@@ -207,12 +210,18 @@ class TouchSurfaceView(
         }
         return true
     }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
+    }
 }
 
 /**
  * Native tactile mouse button supporting independent multi-touch press-and-hold
  * simultaneously with pointer movement on [TouchSurfaceView].
  */
+@SuppressLint("ViewConstructor")
 private class MouseHoldButtonView(
     context: Context,
     label: String,
@@ -286,9 +295,17 @@ private class MouseHoldButtonView(
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 activePointers.clear()
                 updateHeld(false)
+                if (event.actionMasked == MotionEvent.ACTION_UP) {
+                    performClick()
+                }
                 return true
             }
         }
+        return true
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
         return true
     }
 }

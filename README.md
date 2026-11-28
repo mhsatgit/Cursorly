@@ -30,8 +30,8 @@
 | Category | Technology | Badge & Version | Purpose |
 | :--- | :--- | :--- | :--- |
 | **Android App** | Kotlin & Jetpack Compose | ![Kotlin 2.2.10](https://img.shields.io/badge/Kotlin-2.2.10-7F52FF?logo=kotlin&logoColor=white) ![Compose BOM 2025.05.00](https://img.shields.io/badge/Compose_BOM-2025.05.00-4285F4?logo=jetpackcompose&logoColor=white) | Native Android UI, Material 3 & unbuffered `MotionEvent` capture |
-| **Android SDK & Build** | Android Gradle Plugin | ![AGP 9.5.1](https://img.shields.io/badge/AGP-9.5.1-3DDC84?logo=android&logoColor=white) ![Android API 28+](https://img.shields.io/badge/Min_SDK-28-3DDC84) | Android 9+ (`minSdk 28`, `targetSdk 36`, `compileSdk 37`) |
-| **Android Networking** | OkHttp & Coroutines | ![OkHttp 4.12.0](https://img.shields.io/badge/OkHttp-4.12.0-000000) ![Coroutines 1.10.1](https://img.shields.io/badge/Coroutines-1.10.1-7F52FF) | Low-latency WebSocket transport (`TCP_NODELAY`) & async I/O |
+| **Android SDK & Build** | Android Gradle Plugin | ![AGP 9.5.3](https://img.shields.io/badge/AGP-9.5.3-3DDC84?logo=android&logoColor=white) ![Android API 28+](https://img.shields.io/badge/Min_SDK-28-3DDC84) | Android 9+ (`minSdk 28`, `targetSdk 37`, `compileSdk 37`) |
+| **Android Networking** | OkHttp & Coroutines | ![OkHttp 5.5.1](https://img.shields.io/badge/OkHttp-5.5.1-000000) ![Coroutines 1.11.0](https://img.shields.io/badge/Coroutines-1.11.0-7F52FF) | Low-latency WebSocket transport (`TCP_NODELAY`) & async I/O |
 | **Backend Host** | Python & FastAPI | ![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white) ![FastAPI >=0.110.0](https://img.shields.io/badge/FastAPI-%3E%3D0.110.0-009688?logo=fastapi&logoColor=white) | Host runtime, HTTP/WebSocket server & web trackpad client |
 | **ASGI Server** | Uvicorn (`standard`) | ![Uvicorn >=0.28.0](https://img.shields.io/badge/Uvicorn-%3E%3D0.28.0-4051B5) | High-frequency WebSocket & HTTP event loop |
 | **Signal Processing** | 1€ Filter & Ballistics | ![Pure Python](https://img.shields.io/badge/Engine-Pure_Python-3776AB) | Adaptive smoothing, dynamic velocity curve & sub-pixel error diffusion |
@@ -43,7 +43,7 @@
 
 ```text
 Cursorly/
-├── android/                                  # Native Android Jetpack Compose client
+├── android/                                  # Native Android Jetpack Compose client (Android Studio project)
 │   ├── app/
 │   │   ├── src/
 │   │   │   ├── main/
@@ -59,8 +59,11 @@ Cursorly/
 │   │   │   │   └── AndroidManifest.xml       # Network, multicast & Bluetooth permissions
 │   │   │   └── test/java/com/cursorly/trackpad/ # JUnit tests (OneEuroFilter2DTest, PacketCodecTest)
 │   │   └── build.gradle.kts                  # Android app dependencies & SDK configuration
+│   ├── gradle/wrapper/                       # Gradle Wrapper configuration & JAR
 │   ├── build.gradle.kts                      # Root Gradle plugin declarations
 │   ├── gradle.properties                     # JVM & AndroidX flags
+│   ├── gradlew                               # Gradle Wrapper script (macOS / Linux / CI)
+│   ├── gradlew.bat                           # Gradle Wrapper script (Windows)
 │   └── settings.gradle.kts                   # Gradle module configuration
 ├── cursorly/                                 # Python PC host package
 │   ├── adapters/
@@ -88,8 +91,7 @@ Cursorly/
 ├── requirements.txt                          # Runtime dependencies (fastapi, uvicorn)
 ├── requirements-dev.txt                      # Development dependencies (pytest, ruff)
 ├── setup.bat                                 # One-click Windows venv & dependency setup
-├── run_cursorly.bat                          # Windows virtual-environment launcher
-└── tools.ps1                                 # Portable Windows x64 Android toolchain installer (.tools/)
+└── run_cursorly.bat                          # Windows virtual-environment launcher
 ```
 
 ## Transport Modes Summary
@@ -110,7 +112,7 @@ Cursorly/
 - **Windows 10 or Windows 11** (for the PC host using Win32 `SendInput`)
 - **Python** `>= 3.10` (with `venv` and `pip`)
 - **Android Device** (`Android 9 / API 28+`)
-- **Optional:** Run `tools.ps1` on Windows x64 to automatically install the portable Android build toolchain (`.tools/jdk`, `.tools/android-sdk`, `.tools/gradle-9.9.1`), or open `android/` in **Android Studio**; **ADB** is included in `.tools/android-sdk/platform-tools` if using `--mode adb`
+- **Optional (for building from source or ADB mode):** **Android Studio** (with Android SDK Platform `37.0`, Build-Tools `37.0.0`, and Platform-Tools installed via SDK Manager); ensure Android SDK `platform-tools` (`adb`) is on your `PATH` if using `--mode adb`
 
 ### Option 1: Quick Start (Recommended for Users)
 
@@ -160,8 +162,8 @@ python -m cursorly.main --mode adb --serial 192.168.1.50:5555
 
 ### Option 3: Android App & Connection
 
-1. Install the portable Android toolchain via `tools.ps1` and build/install the APK (see [Run Android Unit Tests & Build Debug APK](#run-android-unit-tests--build-debug-apk)), or open `android/` in **Android Studio**.
-2. Install the generated APK onto your phone (`adb install -r android\app\build\outputs\apk\debug\app-debug.apk`).
+1. Open `android/` in **Android Studio** and build/install the APK (see [Run Android Unit Tests & Build Debug APK](#run-android-unit-tests--build-debug-apk)).
+2. Or install the generated APK onto your phone (`adb install -r android\app\build\outputs\apk\debug\app-debug.apk`).
 3. Launch **Cursorly** on Android while the PC host is running—your PC appears automatically in **Available PCs** (or auto-connects when a single host is detected).
 4. **Browser Fallback:** Without installing the APK, open `http://<PC_IP>:8080` in Chrome or Firefox on your phone.
 
@@ -181,30 +183,37 @@ ruff check cursorly tests
 
 ### Run Android Unit Tests & Build Debug APK
 
-On Windows x64, run [tools.ps1](tools.ps1) from the repository root to automatically download and verify `.tools\jdk` (JDK 25), `.tools\android-sdk` (`platforms/android-37.0`, `build-tools/37.0.0`, `platform-tools`), and `.tools\gradle-9.9.1`:
+Cursorly uses a standard **Android Studio** project under `android/` with the included **Gradle Wrapper** (`gradlew` / `gradlew.bat`)—no repository-local SDK, JDK, or Gradle installation is required.
+
+#### 1. Configure Android Studio & Required SDK Tools
+
+1. Install **Android Studio** and open the `android/` directory (**File > Open...** -> select `android/`).
+2. Open **Settings / SDK Manager > Languages & Frameworks > Android SDK** and install:
+   - **SDK Platforms:** **Android API 37** (`android-37.0`, matching `compileSdk 37`)
+   - **SDK Tools:** **Android SDK Build-Tools 37.0.0** and **Android SDK Platform-Tools** (includes `adb`)
+3. Open **Settings > Build, Execution, Deployment > Build Tools > Gradle** and set **Gradle JDK** to Android Studio's bundled **JetBrains Runtime** (JDK 25 / `jbr`, or any compatible JDK 17+).
+4. Wait for **Gradle Sync** to finish—Android Studio automatically generates `android/local.properties` pointing to your local Android SDK and fetches dependencies via the Gradle Wrapper (`Gradle 9.9.1`).
+
+#### 2. Run Tests & Build in Android Studio (Recommended)
+
+- **Run Unit Tests:** Right-click `android/app/src/test` in the Project view and click **Run 'All Tests'**.
+- **Build Debug APK:** Choose **Build > Build App Bundle(s) / APK(s) > Build APK(s)** (outputs to `android/app/build/outputs/apk/debug/app-debug.apk`).
+- **Run on Device:** Connect an Android device with USB Debugging enabled and click **Run** (`Shift+F10`).
+
+#### 3. Optional: Command-Line Build via Gradle Wrapper
+
+From Android Studio's Terminal (or PowerShell with `JAVA_HOME` set to Android Studio's `jbr` / JDK and `ANDROID_HOME` or `android/local.properties` configured):
 
 ```powershell
-# 1. Install the portable Android toolchain into .tools\
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools.ps1
+cd android
 
-# 2. Point this PowerShell session to the installed JDK and Android SDK
-$env:JAVA_HOME = (Resolve-Path ".tools\jdk").Path
-$env:ANDROID_HOME = (Resolve-Path ".tools\android-sdk").Path
-# Optional: keep Gradle's dependency cache inside .tools\gradle-cache instead of %USERPROFILE%\.gradle
-# $env:GRADLE_USER_HOME = (Resolve-Path ".tools\gradle-cache").Path
+# Run Android unit tests and build the debug APK
+.\gradlew.bat testDebugUnitTest assembleDebug
 
-# 3. Run the first build online (without --offline) so Gradle downloads dependencies into .gradle automatically
-& ".tools\gradle-9.9.1\bin\gradle.bat" -p android testDebugUnitTest assembleDebug --no-daemon
-
-# 4. Subsequent builds can run offline once dependencies are cached
-& ".tools\gradle-9.9.1\bin\gradle.bat" -p android testDebugUnitTest assembleDebug --offline --no-daemon
-
-# 5. (Optional) Install and launch the built APK on a connected USB-debugging device
-& ".tools\android-sdk\platform-tools\adb.exe" install -r "android\app\build\outputs\apk\debug\app-debug.apk"
-& ".tools\android-sdk\platform-tools\adb.exe" shell am start -n com.cursorly.trackpad/.MainActivity
+# (Optional) Install and launch the built APK on a connected USB-debugging device
+adb install -r app\build\outputs\apk\debug\app-debug.apk
+adb shell am start -n com.cursorly.trackpad/.MainActivity
 ```
-
-*(Alternatively, open `android/` directly in **Android Studio** and run **Build > Build APK(s)** / unit tests.)*
 
 ## API Endpoints & Controls
 

@@ -21,9 +21,9 @@ Thank you for your interest in improving Cursorly!
    pip install -r requirements-dev.txt
    ```
 
-4. Install Android Build Tools:
+4. Configure Android Studio (Optional, for Android development):
 
-   Refer README [Run Android Unit Tests & Build Debug APK](#run-android-unit-tests--build-debug-apk)
+   Install **Android Studio**, open the `android/` directory, and configure the required SDK tools via **SDK Manager** (refer to README [Run Android Unit Tests & Build Debug APK](README.md#run-android-unit-tests--build-debug-apk)).
 
 ## Running Tests
 
@@ -32,7 +32,7 @@ Run the full automated Python test suite before opening a pull request:
 python -m unittest discover tests -v
 ```
 
-If modifying Android code under `android/`, also run the Android unit tests in Android Studio (or `gradle -p android testDebugUnitTest`). Ensure all tests pass and that any new features include corresponding test cases.
+If modifying Android code under `android/`, also run the Android unit tests in Android Studio (or `.\gradlew.bat testDebugUnitTest` inside `android/`). Ensure all tests pass and that any new features include corresponding test cases.
 
 ## Submitting Pull Requests
 

@@ -71,8 +71,7 @@ Desktop.ini
 .DS_Store
 *.log
 
-# Local tools and Android build artifacts
-.tools/
+# Android Studio & Gradle build artifacts
 android/.gradle/
 android/.kotlin/
 android/local.properties
